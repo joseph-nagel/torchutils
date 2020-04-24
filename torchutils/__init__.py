@@ -26,7 +26,10 @@ __COPYRIGHT__ = 'Copyright 2020 Joseph Benjamin Nagel'
 # from . import tools
 # from . import training
 
-from .data import image2tensor, tensor2image, mean_std_over_dataset
+from .data import \
+    mean_std_over_dataset, \
+    GaussianNoise, BalancedSampler, \
+    image2tensor, tensor2image
 from .loss import HingeLoss
 from .pretrained import create_feature_extractor, extract_features
 from .tools import conv_out_shape

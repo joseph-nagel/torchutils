@@ -7,6 +7,7 @@ Auxiliary functions for typical data processing tasks are contained.
 Most notably, the function 'mean_std_over_dataset' computes
 the mean and std. of a dataset in batch-wise processing.
 The transformer class 'GaussianNoise' can be used to add noise to images.
+Balancing sampling for imbalanced datasets can be found in 'BalancedSampler'.
 In addition, 'image2tensor' and 'tensor2image' establish converters
 between Numpy arrays and PyTorch tensors for image data.
 They are compliant with the standard shape conventions.
@@ -21,7 +22,7 @@ ints in [0,255] or floats in [0,1], while torchvision.transforms.ToTensor yields
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Sampler
 
 def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=True):
     '''
@@ -100,6 +101,53 @@ class GaussianNoise(object):
     def __call__(self, X):
         X_noisy = X + torch.randn_like(X) * self.noise_std
         return X_noisy
+
+class BalancedSampler(Sampler):
+    '''
+    Balanced sampling of imbalanced datasets.
+
+    Summary
+    -------
+    In order to deal with an imbalanced classification dataset,
+    an appropriate over/undersampling scheme is implemented.
+    Here, samples are taken with replacement from the set, such that
+    all classes are equally likely to occur in the training mini-batches.
+    This might be especially helpful in combination with data augmentation.
+    Different weights for samples in the empirical loss would be an alternative.
+
+    Parameters
+    ----------
+    data_set : PyTorch dataset.
+        Imbalanced dataset to be over/undersampled.
+
+    '''
+
+    def __init__(self, dataset):
+        self.no_samples = len(dataset)
+        self.indices = list(range(len(dataset)))
+
+        # class occurrence counts
+        data_loader = DataLoader(dataset, batch_size=1, shuffle=False)
+        labels_list = []
+        for image, label in data_loader:
+            labels_list.append(label)
+        labels_tensor = torch.cat(labels_list, dim=0)
+        unique_labels, counts = torch.unique(labels_tensor, return_counts=True)
+
+        # unnormalized probabilities
+        weights_for_class = 1.0 / counts.float()
+        weights_for_index = torch.tensor(
+            [weights_for_class[labels_tensor[idx]] for idx in self.indices]
+        )
+
+        # balanced sampling distribution
+        self.categorical = torch.distributions.Categorical(probs=weights_for_index)
+
+    def __iter__(self):
+        return (idx for idx in self.categorical.sample((self.no_samples,)))
+
+    def __len__(self):
+        return self.no_samples
 
 def image2tensor(image, unsqueeze=True):
     '''
