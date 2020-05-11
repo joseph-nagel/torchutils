@@ -41,6 +41,7 @@ class ClassifierTraining(object):
     For the multiclass classification, the model may or may not perform a (log)-softmax operation.
     During testing, only the class with the highest response is compared to ground truth,
     the results of which are not altered under the normalizing softmax function.
+    Note that, whenever desired, the logit scores can be easily casted as probabilities.
 
     Parameters
     ----------
@@ -87,6 +88,29 @@ class ClassifierTraining(object):
         '''Predict outputs.'''
         y = self(X)
         return y
+
+    def predict_proba(self, X):
+        '''Predict probabilities.'''
+        y = self.predict(X)
+        if isinstance(self.criterion, nn.BCEWithLogitsLoss):
+            y_probs = torch.sigmoid(y)
+        elif isinstance(self.criterion, nn.CrossEntropyLoss):
+            y_probs = torch.softmax(y, dim=1)
+        elif isinstance(self.criterion, nn.NLLLoss):
+            y_probs = torch.exp(y, dim=1)
+        elif isinstance(self.criterion, HingeLoss):
+            raise NotImplementedError('Platt scaling is not yet implemented')
+        return y_probs
+
+    def predict_top(self, X, threshold=0.5):
+        '''Predict top class and probability.'''
+        y_probs = self.predict_proba(X)
+        if isinstance(self.criterion, (nn.BCEWithLogitsLoss, HingeLoss)):
+            top_class = (y_probs >= threshold).int()
+            top_prob = torch.where(top_class==1, y_probs, 1-y_probs)
+        elif isinstance(self.criterion, (nn.CrossEntropyLoss, nn.NLLLoss)):
+            top_prob, top_class = torch.topk(y_probs, k=1, dim=1)
+        return top_class, top_prob
 
     def train(self, mode=True):
         '''Set training mode of the model.'''
