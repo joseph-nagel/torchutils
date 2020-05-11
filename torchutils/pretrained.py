@@ -125,9 +125,9 @@ def extract_features(feature_extractor, data_loader, expand=None, as_array=False
 
     Parameters
     ----------
-    feature_extractor : PyTorch module.
+    feature_extractor : PyTorch module
         Feature extraction model.
-    data_loader : PyTorch DataLoader.
+    data_loader : PyTorch DataLoader
         Data loader instance.
     expand : tuple or None
         If given, input tensors are expanded accordingly.
