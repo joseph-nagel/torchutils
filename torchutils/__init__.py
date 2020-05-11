@@ -10,6 +10,7 @@ Some auxiliary functions related to data handling are implemented.
 
 Modules
 -------
+analysis : Analysis tools.
 data : Data processing.
 loss : Loss functions.
 pretrained : Pretrained models.
@@ -20,12 +21,14 @@ training : Model training.
 
 __COPYRIGHT__ = 'Copyright 2020 Joseph Benjamin Nagel'
 
+# from . import analysis
 # from . import data
 # from . import loss
 # from . import pretrained
 # from . import tools
 # from . import training
 
+from .analysis import confusion_matrix
 from .data import \
     mean_std_over_dataset, \
     GaussianNoise, BalancedSampler, \
