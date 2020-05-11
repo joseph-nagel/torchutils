@@ -30,7 +30,7 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
 
     Parameters
     ----------
-    data_set : PyTorch DataSet object.
+    data_set : PyTorch DataSet object
         Set of data to be analyzed.
 
     Returns
@@ -117,14 +117,21 @@ class BalancedSampler(Sampler):
 
     Parameters
     ----------
-    data_set : PyTorch dataset.
+    data_set : PyTorch dataset
         Imbalanced dataset to be over/undersampled.
+    no_samples : int or None
+        Number of samples to draw in one epoch.
+    indices : array_like or None
+        Subset of indices that are sampled.
 
     '''
 
-    def __init__(self, dataset):
-        self.no_samples = len(dataset)
+    def __init__(self, dataset, no_samples=None, indices=None):
         self.indices = list(range(len(dataset)))
+        if no_samples is None:
+            self.no_samples = len(dataset) if indices is None else len(indices)
+        else:
+            self.no_samples = no_samples
 
         # class occurrence counts
         data_loader = DataLoader(dataset, batch_size=1, shuffle=False)
@@ -139,6 +146,11 @@ class BalancedSampler(Sampler):
         weights_for_index = torch.tensor(
             [weights_for_class[labels_tensor[idx]] for idx in self.indices]
         )
+
+        # zero indices
+        if indices is not None:
+            zero_ids = np.setdiff1d(self.indices, indices).tolist()
+            weights_for_index[zero_ids] = torch.tensor(0.0)
 
         # balanced sampling distribution
         self.categorical = torch.distributions.Categorical(probs=weights_for_index)
