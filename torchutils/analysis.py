@@ -54,6 +54,9 @@ def conf_mat(y_true, y_pred, no_classes=None):
 
     '''
 
+    y_true = y_true.int()
+    y_pred = y_pred.int()
+
     if no_classes is None:
         no_classes = 1 + torch.max(torch.cat((y_true, y_pred), dim=0)).item()
 
