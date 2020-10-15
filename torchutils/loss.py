@@ -17,8 +17,6 @@ It is remarked that penalization/regularization for the model weights
 are usually specified during the initialization of a PyTorch optimizer.
 Since it refers to a term in the loss, and not a variant of the optimizer,
 that might seem somewhat counterintuitive at first sight.
-Though, as one can see below, the explicit handling of the regularization
-in the loss function would require to pass the relevant model parameters.
 
 '''
 
@@ -39,23 +37,18 @@ class HingeLoss(nn.Module):
 
     '''
 
-    def __init__(self, params=None, c=1.0, squared=False, reduction='mean'):
+    def __init__(self, squared=False, reduction='mean'):
         super().__init__()
-        self.params = params
-        self.c = c
         self.squared = squared
-        self.reduction = reduction
-        if self.reduction == 'mean':
+        if reduction == 'mean':
             self.reduce = torch.mean
-        elif self.reduction == 'sum':
+        elif reduction == 'sum':
             self.reduce = torch.sum
 
     def forward(self, y_pred, y_true):
         if not self.squared: # hinge loss
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0))
         else: # squared hinge loss
-            loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0) ** 2)
-        if self.params is not None and self.c is not None: # l2 penalty
-            loss += self.c * self.sum(self.params ** 2)
+            loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0)**2)
         return loss
 
