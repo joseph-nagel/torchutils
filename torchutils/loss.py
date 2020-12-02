@@ -3,20 +3,20 @@ Loss functions.
 
 Summary
 -------
-The module is supposed to contain some less common loss functions.
-Currently, this only involes the hinge loss for binary classification.
+The module contains some less common loss functions.
+Currently, this involves the hinge loss for binary classification
+and a weighted binary cross entropy, a focal loss variant.
+
 Even though it is lesser known in the deep learning community,
 the hinge loss, or its squared variant, has interesting properties.
 When used in conjunction with an l2 parameter penalty,
 which acts as maximum-margin regularization term,
 it promotes SVM-like soft-margin classifiers.
 
-Notes
------
-It is remarked that penalization/regularization for the model weights
-are usually specified during the initialization of a PyTorch optimizer.
-Since it refers to a term in the loss, and not a variant of the optimizer,
-that might seem somewhat counterintuitive at first sight.
+This module also provides a weighted binary cross entropy loss function.
+It could be used for binary classification or semantic segmentation.
+The loss allows for re-weighting the contributing cross entropy terms
+according to class imbalance and "classification difficulty".
 
 '''
 
@@ -30,10 +30,25 @@ class HingeLoss(nn.Module):
     Summary
     -------
     A hinge loss for binary classification is implemented as a PyTorch module.
-    The function expects {-1,1}-encoded ground thruth class labels.
+    When called, the function expects {-1,1}-encoded ground thruth class labels.
     This is the most natural representation in this context.
     If labels are specified otherwise, they have to be transformed beforehand,
     e.g. from the {0,1}-representation often met in binary classification.
+
+    Parameters
+    ----------
+    squared : bool, optional (default=False)
+        Determines whether or not the loss is squared.
+    reduction : {'mean', 'sum'}, optional (default='mean')
+        Determines the reduction mode, i.e. how the individual loss terms are summarized.
+
+    Notes
+    -----
+    The hinge loss is most often used together with an l2 weight regularizer.
+    It is further remarked that penalization/regularization for the model weights
+    are usually specified during the initialization of a PyTorch optimizer.
+    Since it refers to a term in the loss, and not a variant of the optimizer,
+    that might seem somewhat counterintuitive at first sight.
 
     '''
 
@@ -46,6 +61,19 @@ class HingeLoss(nn.Module):
             self.reduce = torch.sum
 
     def forward(self, y_pred, y_true):
+        '''
+        Compute the hinge loss.
+
+        Parameters
+        ----------
+        y_pred : PyTorch tensor (dtype=float)
+            Predicted real-valued logits (not probabilities).
+            The tensor shape should be consistent with the targets below.
+        y_true : PyTorch tensor (dtype=int)
+            Ground truth targets with values in {-1,1}.
+            The tensor shape should be consistent with the predictions above.
+        '''
+
         if not self.squared: # hinge loss
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0))
         else: # squared hinge loss
@@ -58,7 +86,7 @@ class FocalLoss(nn.Module):
 
     Summary
     -------
-    A weighted binary cross entropy loss is implemented.
+    A weighted binary cross entropy loss is implemented as a PyTorch module.
     It can be used for binary classification or semantic segmentation.
     The formulation is a variant of the focal loss function introduced in [1].
     It is a generalization of the binary cross entropy.
@@ -110,10 +138,10 @@ class FocalLoss(nn.Module):
         ----------
         y_pred : PyTorch tensor (dtype=float)
             Predicted real-valued logits (not probabilities).
-            The array shape should be consistent with the targets below.
+            The tensor shape should be consistent with the targets below.
         y_true : PyTorch tensor (dtype=int)
             Ground truth targets with values in {0,1}.
-            The array shape should be consistent with the predictions above.
+            The tensor shape should be consistent with the predictions above.
         '''
 
         # binary cross entropy
