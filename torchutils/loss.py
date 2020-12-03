@@ -9,7 +9,7 @@ and a weighted binary cross entropy, a focal loss variant.
 
 Even though it is lesser known in the deep learning community,
 the hinge loss, or its squared variant, has interesting properties.
-When used in conjunction with an l2 parameter penalty,
+When used in conjunction with an l2 weight penalty,
 which acts as maximum-margin regularization term,
 it promotes SVM-like soft-margin classifiers.
 
@@ -38,7 +38,7 @@ class HingeLoss(nn.Module):
     Parameters
     ----------
     squared : bool, optional (default=False)
-        Determines whether or not the loss is squared.
+        Determines whether or not the per-datapoint contributions are squared.
     reduction : {'mean', 'sum'}, optional (default='mean')
         Determines the reduction mode, i.e. how the individual loss terms are summarized.
 
@@ -72,6 +72,7 @@ class HingeLoss(nn.Module):
         y_true : PyTorch tensor (dtype=int)
             Ground truth targets with values in {-1,1}.
             The tensor shape should be consistent with the predictions above.
+
         '''
 
         if not self.squared: # hinge loss
@@ -142,6 +143,7 @@ class FocalLoss(nn.Module):
         y_true : PyTorch tensor (dtype=int)
             Ground truth targets with values in {0,1}.
             The tensor shape should be consistent with the predictions above.
+
         '''
 
         # binary cross entropy
