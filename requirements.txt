@@ -1,5 +1,5 @@
-pathlib
 numpy
-matplotlib
 torch
 torchvision
+matplotlib
+notebook
