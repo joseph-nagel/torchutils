@@ -3,8 +3,12 @@ Pretrained models.
 
 Summary
 -------
-A module to create and use feature extractors based on pretrained models.
-The interface is unified over multiple model architectures shipped by torchvision.
+This module facilitates the construction of pretrained feature extractors.
+It is attempted make multiple standard model architectures,
+as they are shipped by torchvision, accessible through a unified interface.
+While this is convenient at times, it should be noted that
+a manual model construction allows for a finer-grained control.
+There are some easy-to-follow examples in the official PyTorch tutorials.
 
 Notes
 -----
@@ -19,11 +23,9 @@ For all pretrained models, inputs should be normalized to zero mean and unit var
 import numpy as np
 import torch
 import torch.nn as nn
-from torchvision.models import AlexNet, VGG, ResNet, Inception3
+from torchvision.models import AlexNet, VGG, ResNet, DenseNet
 
-# TODO: check correctness for ResNet, add Inception3
 def create_feature_extractor(model_architecture,
-                             no_layers=None,
                              input_shape=None,
                              is_pretrained=True,
                              is_frozen=True):
@@ -33,15 +35,13 @@ def create_feature_extractor(model_architecture,
     Summary
     -------
     A feature extractor is created from a predefined model architecture.
-    At the moment, AlexNet, VGG, and ResNet models are supported.
+    At the moment, AlexNet, VGG, and ResNet and DenseNet models are supported.
     The shape of the output features is empirically determined.
 
     Parameters
     ----------
-    model_architecture : PyTorch module or model constructor
+    model_architecture : PyTorch module or constructor function
         Predefined model architecture.
-    no_layers : int or None
-        Last layer used for the features.
     input_shape : tuple or None
         Model input shape. If not given, ImageNet defaults are used.
     is_pretrained : bool
@@ -52,7 +52,7 @@ def create_feature_extractor(model_architecture,
     '''
 
     # initialize model
-    if isinstance(model_architecture, (AlexNet, VGG, ResNet)):
+    if isinstance(model_architecture, (AlexNet, VGG, ResNet, DenseNet)):
         pretrained_model = model_architecture # is already a model instance
     else:
         pretrained_model = model_architecture(pretrained=is_pretrained) # is only a model constructor
@@ -63,24 +63,17 @@ def create_feature_extractor(model_architecture,
 
     # input shape
     if input_shape is None:
-        if not isinstance(pretrained_model, Inception3):
-            input_shape = (3, 224, 224)
-        else:
-            input_shape = (3, 299, 299)
-    if len(input_shape) == 2:
+        input_shape = (3, 224, 224)
+    elif len(input_shape) == 2:
         input_shape = (3,) + input_shape
 
-    # last layer index
-    last_layer_idx = None if no_layers is None else no_layers + 1
-
     # create features
-    if isinstance(pretrained_model, (AlexNet, VGG)):
-        # feature_list = list(pretrained_model.children())[:-2][0]
+    if isinstance(pretrained_model, (AlexNet, VGG, DenseNet)):
         feature_list = list(pretrained_model.features.children())
     elif isinstance(pretrained_model, ResNet):
         feature_list = list(pretrained_model.children())[:-2]
-        feature_list.append(nn.AvgPool2d((7,7)))
-    feature_extractor = nn.Sequential(*feature_list[0:last_layer_idx])
+        feature_list.append(nn.AvgPool2d((7,7))) # TODO: To be removed!?
+    feature_extractor = nn.Sequential(*feature_list)
 
     # feature shape
     feature_shape = get_output_shape(feature_extractor, input_shape)
@@ -99,7 +92,7 @@ def get_output_shape(model, input_shape):
 
     Summary
     -------
-    The model ouput shape is empirically determined for input tensors of a certain shape.
+    The model output shape is empirically determined for input tensors of a certain shape.
     Its values are randomly sampled from a standard normal distribution.
     Very generally, for a given input tensor with shape (no_samples, *input_shape),
     the model predicts an (no_samples, *output_shape)-shaped output.
@@ -150,7 +143,7 @@ def extract_features(feature_extractor, data_loader, expand=None, as_array=False
         features = np.concatenate([tensor.numpy() for tensor in features_list], axis=0)
         labels = np.concatenate([tensor.numpy() for tensor in labels_list], axis=0)
     else: # PyTorch tensors
-        features = torch.cat([tensor for tensor in features_list], dim=0)
-        labels = torch.cat([tensor for tensor in labels_list], dim=0)
+        features = torch.cat(features_list, dim=0)
+        labels = torch.cat(labels_list, dim=0)
     return features, labels
 
