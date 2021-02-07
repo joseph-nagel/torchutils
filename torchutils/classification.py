@@ -1,10 +1,10 @@
 '''
-Model training.
+Classification problems.
 
 Summary
 -------
-The core class 'ClassifierTraining' is provided below.
-It mainly establishes a lightweight wrapper for PyTorch models
+The core class 'Classification' is provided below.
+It mainly establishes a lightweight wrapper for PyTorch classifiers
 and equips them with a training loop and testing functionality.
 
 Notes
@@ -21,13 +21,13 @@ import torch.nn as nn
 from .tools import moving_average
 from .loss import HingeLoss
 
-class ClassifierTraining(object):
+class Classification(object):
     '''
-    Training classifier models.
+    Classification model wrapper class.
 
     Summary
     -------
-    This class facilitates the training and testing of PyTorch models.
+    This class facilitates the training and testing of PyTorch classifiers.
     It features methods performing a whole training loop and a single epoch.
     Testing on a full data loader is also implemented as a method.
     The most common PyTorch loss functions nn.BCEWithLogitsLoss,
@@ -38,7 +38,7 @@ class ClassifierTraining(object):
     The class supports both binary and multi-class classification problems.
     For the binary case, it is assumed that the model does not involve a final (log)-sigmoid,
     i.e. the sigmoid is applied to the model output for testing purposes only.
-    For the multiclass classification, the model may or may not perform a (log)-softmax operation.
+    For the multiclass problem, the model may or may not perform a (log)-softmax operation.
     During testing, only the class with the highest response is compared to ground truth,
     the results of which are not altered under the normalizing softmax function.
     Note that, whenever desired, the logit scores can be easily casted as probabilities.
