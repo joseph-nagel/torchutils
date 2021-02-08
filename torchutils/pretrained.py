@@ -72,7 +72,7 @@ def create_feature_extractor(model_architecture,
         feature_list = list(pretrained_model.features.children())
     elif isinstance(pretrained_model, ResNet):
         feature_list = list(pretrained_model.children())[:-2]
-        feature_list.append(nn.AvgPool2d((7,7))) # TODO: To be removed!?
+        # feature_list.append(nn.AvgPool2d((7,7)))
     feature_extractor = nn.Sequential(*feature_list)
 
     # feature shape
