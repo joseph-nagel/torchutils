@@ -30,6 +30,7 @@ def confusion_matrix(classifier,
 
     y_pred_list = []
     y_true_list = []
+    classifier.train(False)
     with torch.no_grad():
         for _ in range(no_epochs):
             for X_batch, y_batch in data_loader:
