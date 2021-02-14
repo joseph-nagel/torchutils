@@ -96,10 +96,10 @@ def conv_out_shape(input_shape,
     input_shape = np.array(input_shape)
     no_dims = input_shape.size
 
-    kernel_size = make_array(kernel_size, no_dims)
-    stride = make_array(stride, no_dims)
-    padding = make_array(padding, no_dims)
-    dilation = make_array(dilation, no_dims)
+    kernel_size = _make_array(kernel_size, no_dims)
+    stride = _make_array(stride, no_dims)
+    padding = _make_array(padding, no_dims)
+    dilation = _make_array(dilation, no_dims)
 
     if mode == 'floor':
         output_shape = np.floor((input_shape + 2*padding - dilation*(kernel_size-1) - 1) / stride + 1).astype('int')
@@ -113,7 +113,7 @@ def conv_out_shape(input_shape,
 
     return output_shape
 
-def make_array(x, no_dims):
+def _make_array(x, no_dims):
     '''Transform a scalar into an array with equal entries.'''
     return np.array(x) if np.size(x) == no_dims else np.array([x for i in range(no_dims)])
 
