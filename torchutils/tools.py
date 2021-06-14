@@ -18,7 +18,7 @@ def moving_average(x, window=3, mode='full'):
     Summary
     -------
     This function computes the running mean of an array.
-    Padding is performed for the 'left' side, not for the 'right'.
+    Padding is performed for the "left" side, not for the "right".
 
     Parameters
     ----------
@@ -63,7 +63,7 @@ def conv_out_shape(input_shape,
     This function returns the output tensor shape of a convolutional layer.
     One needs to pass the input shape and all relevant layer properties as arguments.
     The parameter convention of PyTorch's convolutional layer modules is adopted herein,
-    e.g. see the documentation of the 'torch.nn.Conv2d' class.
+    e.g. see the documentation of the torch.nn.Conv2d class.
 
     Parameters
     ----------

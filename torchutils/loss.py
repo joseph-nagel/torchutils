@@ -30,7 +30,7 @@ class HingeLoss(nn.Module):
     Summary
     -------
     A hinge loss for binary classification is implemented as a PyTorch module.
-    When called, the function expects {-1,1}-encoded ground thruth class labels.
+    When called, the function expects {-1,1}-encoded ground truth class labels.
     This is the most natural representation in this context.
     If labels are specified otherwise, they have to be transformed beforehand,
     e.g. from the {0,1}-representation often met in binary classification.

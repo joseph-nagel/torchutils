@@ -16,7 +16,7 @@ Note that ImageNet-pretrained models usually expect images of shape (3, 224, 224
 A noteworthy exception is Inception3 with (3, 299, 299) that also features auxiliary outputs.
 The torchvision implementations also accept images with higher spatial sizes.
 Here, the dimensionality gets standardized directly before the fully connected layers.
-For all pretrained models, inputs should be normalized to zero mean and unit variance.
+For all pretrained models, input channels should be normalized to zero mean and unit variance.
 
 '''
 
@@ -88,7 +88,7 @@ def freeze_parameters(model):
 
 def get_output_shape(model, input_shape):
     '''
-    Return the ouput shape of a model.
+    Return the output shape of a model.
 
     Summary
     -------

@@ -51,7 +51,7 @@ def conf_mat(y_true, y_pred, no_classes=None):
     -------
     The confusion matrix is compiled for integer-encoded
     ground-truth labels and corresponding class predictions.
-    This is analagous to sklearn.metrics.confusion_matrix.
+    This is analogous to sklearn.metrics.confusion_matrix.
 
     '''
 
