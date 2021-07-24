@@ -115,7 +115,7 @@ class FocalLoss(nn.Module):
 
     References
     ----------
-    [1] Lin et al, "Focal Loss for Dense Object Detection", IEEE Trans. Pattern Anal. Mach. Intell. 42(2), 2020.
+    [1] Lin et al., "Focal Loss for Dense Object Detection", ICCV 2017.
         https://arxiv.org/abs/1708.02002
     [2] Loaiza-Ganem and Cunningham, "The continuous Bernoulli: fixing a pervasive error in variational autoencoders", NeurIPS 2019.
         https://papers.nips.cc/paper/9484-the-continuous-bernoulli-fixing-a-pervasive-error-in-variational-autoencoders
