@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 
+
 NAME = 'torchutils'
 VERSION = '0.0.1'
 AUTHOR = 'Joseph Nagel'
@@ -8,11 +9,13 @@ URL = 'https://github.com/joseph-nagel/torchutils'
 LICENSE = 'MIT'
 DESCRIPTION = 'Keras-like convenience for PyTorch'
 
+
 try:
     with open('README.md', 'r') as f:
         long_description = f.read()
 except FileNotFoundError:
     long_description = DESCRIPTION
+
 
 setup(
     name = NAME,

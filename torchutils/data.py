@@ -24,6 +24,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader, Sampler
 
+
 def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=True):
     '''
     Calculate mean and std. in a batch-wise sweep over the dataset.
@@ -47,12 +48,14 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
 
     # mean and std.
     if not channel_wise:
+
         # mean
         mean = 0.
         for images, labels in data_loader:
             # print('{}'.format(images.numpy().shape))
             mean += np.mean(images.numpy())
         mean /= len(data_loader)
+
         # std.
         std = 0.
         for images, labels in data_loader:
@@ -62,6 +65,7 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
 
     # channel-wise mean and std.
     else:
+
         # mean
         no_summands = 0.
         mean = np.zeros(3)
@@ -69,6 +73,7 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
             mean += np.sum(images.numpy(), axis=(0,2,3))
             no_summands += np.size(images.numpy()[:,0,:,:])
         mean /= no_summands
+
         # std.
         no_summands = 0.
         std = np.zeros(3)
@@ -83,6 +88,7 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
         print('Std.: {}'.format(np.array2string(np.array(std), precision=4)))
 
     return mean, std
+
 
 class GaussianNoise(object):
     '''
@@ -101,6 +107,7 @@ class GaussianNoise(object):
     def __call__(self, X):
         X_noisy = X + torch.randn_like(X) * self.noise_std
         return X_noisy
+
 
 class BalancedSampler(Sampler):
     '''
@@ -127,7 +134,9 @@ class BalancedSampler(Sampler):
     '''
 
     def __init__(self, dataset, no_samples=None, indices=None):
+
         self.indices = list(range(len(dataset)))
+
         if no_samples is None:
             self.no_samples = len(dataset) if indices is None else len(indices)
         else:
@@ -135,14 +144,17 @@ class BalancedSampler(Sampler):
 
         # class occurrence counts
         data_loader = DataLoader(dataset, batch_size=1, shuffle=False)
+
         labels_list = []
         for image, label in data_loader:
             labels_list.append(label)
         labels_tensor = torch.cat(labels_list, dim=0)
+
         unique_labels, counts = torch.unique(labels_tensor, return_counts=True)
 
         # unnormalized probabilities
         weights_for_class = 1.0 / counts.float()
+
         weights_for_index = torch.tensor(
             [weights_for_class[labels_tensor[idx]] for idx in self.indices]
         )
@@ -160,6 +172,7 @@ class BalancedSampler(Sampler):
 
     def __len__(self):
         return self.no_samples
+
 
 def image2tensor(image, unsqueeze=True):
     '''
@@ -188,6 +201,7 @@ def image2tensor(image, unsqueeze=True):
             tensor = tensor.unsqueeze(0)
 
     return tensor # (no_samples, no_channels, no_rows, no_colums)
+
 
 def tensor2image(tensor, squeeze=True):
     '''

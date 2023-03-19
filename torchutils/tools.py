@@ -11,6 +11,7 @@ Nevertheless, they might be useful at times.
 
 import numpy as np
 
+
 def moving_average(x, window=3, mode='full'):
     '''
     Calculate the moving average over an array.
@@ -38,16 +39,20 @@ def moving_average(x, window=3, mode='full'):
     '''
 
     x = np.array(x)
+
     if mode == 'full':
         x_padded = np.pad(x, (window-1, 0), mode='constant', constant_values=x[0])
         running_mean = np.convolve(x_padded, np.ones((window,))/window, mode='valid')
+
     elif mode == 'last':
         if x.size >= window:
             running_mean = np.convolve(x[-window:], np.ones((window,))/window, mode='valid')[0]
         else:
             x_padded = np.pad(x, (window-x.size, 0), mode='constant', constant_values=x[0])
             running_mean = np.convolve(x_padded, np.ones((window,))/window, mode='valid')[0]
+
     return running_mean
+
 
 def conv_out_shape(input_shape,
                    kernel_size,
@@ -113,7 +118,11 @@ def conv_out_shape(input_shape,
 
     return output_shape
 
+
 def _make_array(x, no_dims):
     '''Transform a scalar into an array with equal entries.'''
-    return np.array(x) if np.size(x) == no_dims else np.array([x for i in range(no_dims)])
+    if np.size(x) == no_dims:
+        return np.array(x)
+    else:
+        return np.array([x for i in range(no_dims)])
 

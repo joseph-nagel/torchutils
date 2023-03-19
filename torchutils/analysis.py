@@ -11,6 +11,7 @@ to calculate and compile the confusion matrix of a classifier.
 
 import torch
 
+
 def confusion_matrix(classifier,
                      data_loader,
                      no_epochs=1,
@@ -28,20 +29,28 @@ def confusion_matrix(classifier,
 
     '''
 
+    classifier.train(False)
+
     y_pred_list = []
     y_true_list = []
-    classifier.train(False)
-    with torch.no_grad():
-        for _ in range(no_epochs):
-            for X_batch, y_batch in data_loader:
-                X_batch = X_batch.to(classifier.device)
+
+    for _ in range(no_epochs):
+        for X_batch, y_batch in data_loader:
+            X_batch = X_batch.to(classifier.device)
+
+            with torch.no_grad():
                 y_class, y_prob = classifier.predict_top(X_batch, **kwargs)
-                y_pred_list.append(y_class.cpu())
-                y_true_list.append(y_batch)
+
+            y_pred_list.append(y_class.cpu())
+            y_true_list.append(y_batch)
+
     y_pred = torch.cat(y_pred_list, dim=0).squeeze()
     y_true = torch.cat(y_true_list, dim=0)
 
-    return conf_mat(y_true, y_pred, no_classes).numpy()
+    confmat = conf_mat(y_true, y_pred, no_classes).numpy()
+
+    return confmat
+
 
 def conf_mat(y_true, y_pred, no_classes=None):
     '''

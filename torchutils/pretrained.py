@@ -23,7 +23,14 @@ For all pretrained models, input channels should be normalized to zero mean and 
 import numpy as np
 import torch
 import torch.nn as nn
-from torchvision.models import AlexNet, VGG, ResNet, DenseNet
+
+from torchvision.models import (
+    AlexNet,
+    VGG,
+    ResNet,
+    DenseNet
+)
+
 
 def create_feature_extractor(model_architecture,
                              input_shape=None,
@@ -72,7 +79,8 @@ def create_feature_extractor(model_architecture,
         feature_list = list(pretrained_model.features.children())
     elif isinstance(pretrained_model, ResNet):
         feature_list = list(pretrained_model.children())[:-2]
-        # feature_list.append(nn.AvgPool2d((7,7)))
+        # feature_list.append(nn.AvgPool2d((7, 7)))
+
     feature_extractor = nn.Sequential(*feature_list)
 
     # feature shape
@@ -81,10 +89,12 @@ def create_feature_extractor(model_architecture,
 
     return feature_extractor, feature_shape
 
+
 def freeze_parameters(model):
     '''Freeze the weights of a model.'''
     for param in model.parameters():
         param.requires_grad = False
+
 
 def get_output_shape(model, input_shape):
     '''
@@ -101,10 +111,14 @@ def get_output_shape(model, input_shape):
     '''
 
     model.eval()
+
     with torch.no_grad():
         predictions = model(torch.randn(1, *input_shape))
+
     output_shape = tuple(predictions.shape[1:])
+
     return output_shape
+
 
 def extract_features(feature_extractor, data_loader, expand=None, as_array=False):
     '''
@@ -129,21 +143,29 @@ def extract_features(feature_extractor, data_loader, expand=None, as_array=False
 
     '''
 
+    feature_extractor.eval()
+
     features_list = []
     labels_list = []
-    feature_extractor.eval()
-    with torch.no_grad():
-        for images, labels in data_loader:
-            if expand is not None:
-                images = images.expand(*expand)
+
+    for images, labels in data_loader:
+
+        if expand is not None:
+            images = images.expand(*expand)
+
+        with torch.no_grad():
             features = feature_extractor(images)
-            features_list.append(features)
-            labels_list.append(labels)
+
+        features_list.append(features)
+        labels_list.append(labels)
+
     if as_array: # Numpy arrays
         features = np.concatenate([tensor.numpy() for tensor in features_list], axis=0)
         labels = np.concatenate([tensor.numpy() for tensor in labels_list], axis=0)
+
     else: # PyTorch tensors
         features = torch.cat(features_list, dim=0)
         labels = torch.cat(labels_list, dim=0)
+
     return features, labels
 

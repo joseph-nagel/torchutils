@@ -21,20 +21,28 @@ tools : General tools.
 
 __COPYRIGHT__ = 'Copyright 2020 Joseph Benjamin Nagel'
 
-# from . import analysis
-# from . import classification
-# from . import data
-# from . import loss
-# from . import pretrained
-# from . import tools
+
+from . import analysis
+from . import classification
+from . import data
+from . import loss
+from . import pretrained
+from . import tools
+
 
 from .analysis import confusion_matrix
+
 from .classification import Classification
-from .data import \
-    mean_std_over_dataset, \
-    GaussianNoise, BalancedSampler, \
+
+from .data import (
+    mean_std_over_dataset,
+    GaussianNoise, BalancedSampler,
     image2tensor, tensor2image
+)
+
 from .loss import HingeLoss, FocalLoss
+
 from .pretrained import create_feature_extractor, extract_features
+
 from .tools import conv_out_shape
 

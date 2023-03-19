@@ -23,6 +23,7 @@ according to class imbalance and "classification difficulty".
 import torch
 import torch.nn as nn
 
+
 class HingeLoss(nn.Module):
     '''
     Hinge loss function.
@@ -54,7 +55,9 @@ class HingeLoss(nn.Module):
 
     def __init__(self, squared=False, reduction='mean'):
         super().__init__()
+
         self.squared = squared
+
         if reduction == 'mean':
             self.reduce = torch.mean
         elif reduction == 'sum':
@@ -79,7 +82,9 @@ class HingeLoss(nn.Module):
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0))
         else: # squared hinge loss
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0)**2)
+
         return loss
+
 
 class FocalLoss(nn.Module):
     '''
@@ -122,10 +127,15 @@ class FocalLoss(nn.Module):
 
     '''
 
-    def __init__(self, pos_weight=1., focal_gamma=0., reduction='mean'):
+    def __init__(self,
+                 pos_weight=1.,
+                 focal_gamma=0.,
+                 reduction='mean'):
         super().__init__()
+
         self.pos_weight = abs(pos_weight)
         self.focal_gamma = abs(focal_gamma)
+
         if reduction == 'mean':
             self.reduce = torch.mean
         elif reduction == 'sum':
@@ -149,9 +159,11 @@ class FocalLoss(nn.Module):
         # binary cross entropy
         # bce_terms = -(torch.multiply(y_true, torch.log(torch.sigmoid(y_pred))) \
         #               + torch.multiply((1-y_true), torch.log(1-torch.sigmoid_(y_pred))))
-        bce_terms = nn.functional.binary_cross_entropy_with_logits(y_pred,
-                                                                   y_true.type(y_pred.dtype),
-                                                                   reduction='none')
+        bce_terms = nn.functional.binary_cross_entropy_with_logits(
+            y_pred,
+            y_true.type(y_pred.dtype),
+            reduction='none'
+        )
 
         # weighting factors
         # balance_weights = torch.where(y_true==1, self.pos_weight, 1.).type(y_pred.dtype).to(y_pred.device)
