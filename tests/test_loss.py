@@ -13,8 +13,8 @@ def data_y_true_y_pred(request):
     '''Sample ground truth labels and predicted logits.'''
     torch.manual_seed(0)
 
-    no_samples = request.param
-    shape = (no_samples,)
+    num_samples = request.param
+    shape = (num_samples,)
 
     y_true = torch.randint(2, size=shape)
     y_pred = torch.randn(*shape)

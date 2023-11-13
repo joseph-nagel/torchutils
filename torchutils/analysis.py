@@ -14,8 +14,8 @@ import torch
 
 def confusion_matrix(classifier,
                      data_loader,
-                     no_epochs=1,
-                     no_classes=None,
+                     num_epochs=1,
+                     num_classes=None,
                      **kwargs):
     '''
     Calculate the confusion matrix for a classifier and data loader.
@@ -34,7 +34,7 @@ def confusion_matrix(classifier,
     y_pred_list = []
     y_true_list = []
 
-    for _ in range(no_epochs):
+    for _ in range(num_epochs):
         for X_batch, y_batch in data_loader:
             X_batch = X_batch.to(classifier.device)
 
@@ -47,12 +47,12 @@ def confusion_matrix(classifier,
     y_pred = torch.cat(y_pred_list, dim=0).squeeze()
     y_true = torch.cat(y_true_list, dim=0)
 
-    confmat = conf_mat(y_true, y_pred, no_classes).numpy()
+    confmat = conf_mat(y_true, y_pred, num_classes).numpy()
 
     return confmat
 
 
-def conf_mat(y_true, y_pred, no_classes=None):
+def conf_mat(y_true, y_pred, num_classes=None):
     '''
     Construct the confusion matrix from predictions and targets.
 
@@ -67,10 +67,10 @@ def conf_mat(y_true, y_pred, no_classes=None):
     y_true = y_true.int()
     y_pred = y_pred.int()
 
-    if no_classes is None:
-        no_classes = 1 + torch.max(torch.cat((y_true, y_pred), dim=0)).item()
+    if num_classes is None:
+        num_classes = 1 + torch.max(torch.cat((y_true, y_pred), dim=0)).item()
 
-    confmat = torch.zeros(no_classes, no_classes, dtype=torch.int64)
+    confmat = torch.zeros(num_classes, num_classes, dtype=torch.int64)
     for r, c in zip(y_true, y_pred):
         confmat[r, c] += 1
 

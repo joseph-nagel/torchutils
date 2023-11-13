@@ -13,11 +13,11 @@ def data_y_true_y_top1():
     '''Sample ground truth labels and top-class predictions.'''
     torch.manual_seed(0)
 
-    no_classes = 10
-    no_samples = 1000
+    num_classes = 10
+    num_samples = 1000
 
-    y_true = torch.randint(no_classes, size=(no_samples,))
-    y_top1 = torch.randint(no_classes, size=(no_samples,))
+    y_true = torch.randint(num_classes, size=(num_samples,))
+    y_top1 = torch.randint(num_classes, size=(num_samples,))
 
     return y_true, y_top1
 

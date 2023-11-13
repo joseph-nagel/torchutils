@@ -13,11 +13,11 @@ def data_image_loader():
     '''Create a data loader with random images.'''
     torch.manual_seed(0)
 
-    no_samples = 10
+    num_samples = 10
     image_shape = (224, 224)
 
-    X = torch.randn(no_samples, 3, *image_shape)
-    y = torch.randint(2, size=(no_samples,))
+    X = torch.randn(num_samples, 3, *image_shape)
+    y = torch.randint(2, size=(num_samples,))
 
     data_set = TensorDataset(X, y)
     data_loader = DataLoader(data_set, batch_size=32, shuffle=True)

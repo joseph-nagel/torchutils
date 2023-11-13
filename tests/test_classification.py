@@ -10,35 +10,35 @@ from torchutils.classification import Classification
 
 
 @pytest.fixture(params=[1, 10])
-def data_no_features(request):
+def data_num_features(request):
     return request.param
 
 
 @pytest.fixture(params=[2, 10])
-def data_no_classes(request):
+def data_num_classes(request):
     return request.param
 
 
 @pytest.fixture(params=[1000])
-def data_no_samples(request):
+def data_num_samples(request):
     return request.param
 
 
 @pytest.fixture
-def data_classification(data_no_features,
-                        data_no_classes,
-                        data_no_samples):
+def data_classification(data_num_features,
+                        data_num_classes,
+                        data_num_samples):
     '''Create classification problem.'''
     torch.manual_seed(0)
 
-    no_features = data_no_features
-    no_classes = data_no_classes
-    no_samples = data_no_samples
+    num_features = data_num_features
+    num_classes = data_num_classes
+    num_samples = data_num_samples
 
-    no_outputs = 1 if no_classes==2 else no_classes
+    num_outputs = 1 if num_classes==2 else num_classes
 
-    X = torch.randn(no_samples, no_features)
-    y = torch.randint(no_classes, size=(no_samples,))
+    X = torch.randn(num_samples, num_features)
+    y = torch.randint(num_classes, size=(num_samples,))
 
     X_train, X_test, y_train, y_test = train_test_split(
         X, y,
@@ -52,9 +52,9 @@ def data_classification(data_no_features,
     train_loader = DataLoader(train_set, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_set, batch_size=32, shuffle=False)
 
-    model = nn.Linear(no_features, no_outputs)
+    model = nn.Linear(num_features, num_outputs)
 
-    if no_outputs == 1:
+    if num_outputs == 1:
         criterion = nn.BCEWithLogitsLoss(reduction='mean')
     else:
         criterion = nn.CrossEntropyLoss(reduction='mean')

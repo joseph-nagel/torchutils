@@ -12,14 +12,14 @@ from torchutils.data import (
 )
 
 
-@pytest.mark.parametrize('no_samples', [100, 1000])
+@pytest.mark.parametrize('num_samples', [100, 1000])
 @pytest.mark.parametrize('feature_shape', [(), (1,), (10,), (10, 10)])
-def test_mean_std_over_dataset(no_samples, feature_shape):
+def test_mean_std_over_dataset(num_samples, feature_shape):
     '''Test correctness of evaluating the mean and standard deviation.'''
     torch.manual_seed(0)
 
-    X = torch.randn(no_samples, *feature_shape)
-    y = torch.randint(2, size=(no_samples,))
+    X = torch.randn(num_samples, *feature_shape)
+    y = torch.randint(2, size=(num_samples,))
 
     data_set = TensorDataset(X, y)
 

@@ -14,9 +14,9 @@ They are compliant with the standard shape conventions.
 
 Notes
 -----
-Notice that plt.imshow requires (no_rows, no_cols, 3/4)-shaped arrays with
+Notice that plt.imshow requires (num_rows, num_cols, 3/4)-shaped arrays with
 ints in [0,255] or floats in [0,1], while torchvision.transforms.ToTensor yields
-(no_samples, no_channels, no_rows, no_cols)-sized tensors with float32s in [0,1].
+(num_samples, num_channels, num_rows, num_cols)-sized tensors with float32s in [0,1].
 
 '''
 
@@ -67,20 +67,20 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=Tr
     else:
 
         # mean
-        no_summands = 0.
+        num_summands = 0.
         mean = np.zeros(3)
         for images, labels in data_loader:
             mean += np.sum(images.numpy(), axis=(0,2,3))
-            no_summands += np.size(images.numpy()[:,0,:,:])
-        mean /= no_summands
+            num_summands += np.size(images.numpy()[:,0,:,:])
+        mean /= num_summands
 
         # std.
-        no_summands = 0.
+        num_summands = 0.
         std = np.zeros(3)
         for images, labels in data_loader:
             std += np.sum((images.numpy() - mean.reshape(1,-1,1,1))**2, axis=(0,2,3))
-            no_summands += np.size(images.numpy()[:,0,:,:])
-        std /= no_summands - 1
+            num_summands += np.size(images.numpy()[:,0,:,:])
+        std /= num_summands - 1
         std = np.sqrt(std)
 
     if verbose:
@@ -126,21 +126,21 @@ class BalancedSampler(Sampler):
     ----------
     data_set : PyTorch dataset
         Imbalanced dataset to be over/undersampled.
-    no_samples : int or None
+    num_samples : int or None
         Number of samples to draw in one epoch.
     indices : array_like or None
         Subset of indices that are sampled.
 
     '''
 
-    def __init__(self, dataset, no_samples=None, indices=None):
+    def __init__(self, dataset, num_samples=None, indices=None):
 
         self.indices = list(range(len(dataset)))
 
-        if no_samples is None:
-            self.no_samples = len(dataset) if indices is None else len(indices)
+        if num_samples is None:
+            self.num_samples = len(dataset) if indices is None else len(indices)
         else:
-            self.no_samples = no_samples
+            self.num_samples = num_samples
 
         # class occurrence counts
         data_loader = DataLoader(dataset, batch_size=1, shuffle=False)
@@ -168,10 +168,10 @@ class BalancedSampler(Sampler):
         self.categorical = torch.distributions.Categorical(probs=weights_for_index)
 
     def __iter__(self):
-        return (idx for idx in self.categorical.sample((self.no_samples,)))
+        return (idx for idx in self.categorical.sample((self.num_samples,)))
 
     def __len__(self):
-        return self.no_samples
+        return self.num_samples
 
 
 def image2tensor(image, unsqueeze=True):
@@ -189,18 +189,18 @@ def image2tensor(image, unsqueeze=True):
 
     '''
 
-    if image.ndim == 2: # (no_rows, no_cols)
+    if image.ndim == 2: # (num_rows, num_cols)
         tensor = torch.from_numpy(image)
-    elif image.ndim == 3: # (no_rows, no_cols, no_channels)
+    elif image.ndim == 3: # (num_rows, num_cols, num_channels)
         tensor = torch.from_numpy(image.transpose(2, 0, 1))
-    elif image.ndim == 4: # (no_samples, no_rows, no_channels)
+    elif image.ndim == 4: # (num_samples, num_rows, num_channels)
         tensor = torch.from_numpy(image.transpose(0, 3, 1, 2))
 
     if unsqueeze:
         for _ in range(4 - image.ndim):
             tensor = tensor.unsqueeze(0)
 
-    return tensor # (no_samples, no_channels, no_rows, no_colums)
+    return tensor # (num_samples, num_channels, num_rows, num_colums)
 
 
 def tensor2image(tensor, squeeze=True):
@@ -218,15 +218,15 @@ def tensor2image(tensor, squeeze=True):
 
     '''
 
-    if tensor.ndim == 2: # (no_rows, no_cols)
+    if tensor.ndim == 2: # (num_rows, num_cols)
         image = tensor.numpy()
-    elif tensor.ndim == 3: # (no_channels, no_rows, no_cols)
+    elif tensor.ndim == 3: # (num_channels, num_rows, num_cols)
         image = tensor.numpy().transpose((1, 2, 0))
-    elif tensor.ndim == 4: # (no_samples, no_channels, no_rows, no_cols)
+    elif tensor.ndim == 4: # (num_samples, num_channels, num_rows, num_cols)
         image = tensor.numpy().transpose((0, 2, 3, 1))
 
     if squeeze:
         image = image.squeeze()
 
-    return image # (no_samples, no_rows, no_cols, no_channels)
+    return image # (num_samples, num_rows, num_cols, num_channels)
 

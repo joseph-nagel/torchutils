@@ -99,30 +99,30 @@ def conv_out_shape(input_shape,
     '''
 
     input_shape = np.array(input_shape)
-    no_dims = input_shape.size
+    num_dims = input_shape.size
 
-    kernel_size = _make_array(kernel_size, no_dims)
-    stride = _make_array(stride, no_dims)
-    padding = _make_array(padding, no_dims)
-    dilation = _make_array(dilation, no_dims)
+    kernel_size = _make_array(kernel_size, num_dims)
+    stride = _make_array(stride, num_dims)
+    padding = _make_array(padding, num_dims)
+    dilation = _make_array(dilation, num_dims)
 
     if mode == 'floor':
         output_shape = np.floor((input_shape + 2*padding - dilation*(kernel_size-1) - 1) / stride + 1).astype('int')
     elif mode == 'ceil':
         output_shape = np.ceil((input_shape + 2*padding - dilation*(kernel_size-1) - 1) / stride + 1).astype('int')
 
-    if no_dims == 1:
+    if num_dims == 1:
         output_shape = int(output_shape)
-    if no_dims >= 2:
-        output_shape = tuple([int(output_shape[i]) for i in range(no_dims)])
+    if num_dims >= 2:
+        output_shape = tuple([int(output_shape[i]) for i in range(num_dims)])
 
     return output_shape
 
 
-def _make_array(x, no_dims):
+def _make_array(x, num_dims):
     '''Transform a scalar into an array with equal entries.'''
-    if np.size(x) == no_dims:
+    if np.size(x) == num_dims:
         return np.array(x)
     else:
-        return np.array([x for i in range(no_dims)])
+        return np.array([x for i in range(num_dims)])
 

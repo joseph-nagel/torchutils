@@ -10,8 +10,8 @@ and equips them with a training loop and testing functionality.
 Notes
 -----
 Regarding PyTorch's classification losses, it is remarked that nn.CrossEntropyLoss
-expects (no_samples, no_classes>1) predictions and (no_samples,) targets, while
-nn.BCEWithLogitsLoss requires equally shaped predictions and targets with (no_samples, *).
+expects (num_samples, num_classes>1) predictions and (num_samples,) targets, while
+nn.BCEWithLogitsLoss requires equally shaped predictions and targets with (num_samples, *).
 This is realized through corresponding if-constructs in the code.
 
 '''
@@ -125,7 +125,7 @@ class Classification(object):
         '''Set training mode of the model.'''
         self.model.train(mode)
 
-    def training(self, no_epochs, log_interval=100, threshold=0.5, initial_test=True):
+    def training(self, num_epochs, log_interval=100, threshold=0.5, initial_test=True):
         '''Perform a number of training epochs.'''
         self.epoch = 0
 
@@ -146,7 +146,7 @@ class Classification(object):
                   .format(self.epoch, val_loss, val_acc))
 
         # training loop
-        for epoch_idx in range(no_epochs):
+        for epoch_idx in range(num_epochs):
             train_loss = self.train_epoch(log_interval)
             train_losses.append(train_loss)
             self.epoch += 1
@@ -159,7 +159,7 @@ class Classification(object):
                 print('Finished epoch: {}, avg. val. loss: {:.4f}, val. acc.: {:.4f}' \
                       .format(self.epoch, val_loss, val_acc))
 
-        history = {'no_epochs': no_epochs,
+        history = {'num_epochs': num_epochs,
                    'train_loss': train_losses,
                    'val_loss': val_losses,
                    'val_acc': val_accs}
@@ -214,18 +214,18 @@ class Classification(object):
         return running_loss
 
     @torch.no_grad()
-    def test(self, test_loader=None, no_epochs=1, threshold=0.5):
+    def test(self, test_loader=None, num_epochs=1, threshold=0.5):
         '''Compute average test loss and accuracy.'''
         self.train(False)
 
         if test_loader is None:
             test_loader = self.val_loader
 
-        no_total = 0
-        no_correct = 0
+        num_total = 0
+        num_correct = 0
         test_loss = 0.0
 
-        for epoch_idx in range(no_epochs):
+        for epoch_idx in range(num_epochs):
             for X_batch, y_batch in test_loader:
 
                 # device
@@ -249,7 +249,7 @@ class Classification(object):
 
                 # analysis
                 test_loss += loss.data.item()
-                no_total += X_batch.shape[0]
+                num_total += X_batch.shape[0]
 
                 if isinstance(self.criterion, nn.BCEWithLogitsLoss):
                     is_correct = (torch.sigmoid(y_pred) >= threshold).squeeze().int() == y_batch.squeeze().int()
@@ -258,9 +258,9 @@ class Classification(object):
                 elif isinstance(self.criterion, HingeLoss):
                     is_correct = torch.sign(y_pred).squeeze().int() == y_batch.squeeze().int()
 
-                no_correct += torch.sum(is_correct).item()
+                num_correct += torch.sum(is_correct).item()
 
-        test_acc = no_correct / no_total
+        test_acc = num_correct / num_total
 
         if self.criterion.reduction == 'sum': # averaging over all data
             test_loss /= len(test_loader.dataset)

@@ -85,7 +85,7 @@ def create_feature_extractor(model_architecture,
 
     # feature shape
     feature_shape = get_output_shape(feature_extractor, input_shape)
-    # no_features = np.prod(feature_shape)
+    # num_features = np.prod(feature_shape)
 
     return feature_extractor, feature_shape
 
@@ -104,8 +104,8 @@ def get_output_shape(model, input_shape):
     -------
     The model output shape is empirically determined for input tensors of a certain shape.
     Its values are randomly sampled from a standard normal distribution.
-    Very generally, for a given input tensor with shape (no_samples, *input_shape),
-    the model predicts an (no_samples, *output_shape)-shaped output.
+    Very generally, for a given input tensor with shape (num_samples, *input_shape),
+    the model predicts an (num_samples, *output_shape)-shaped output.
     The shape of this output, without the sample size, is returned.
 
     '''
