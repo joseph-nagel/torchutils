@@ -54,6 +54,7 @@ class HingeLoss(nn.Module):
     '''
 
     def __init__(self, squared=False, reduction='mean'):
+
         super().__init__()
 
         self.squared = squared
@@ -78,9 +79,11 @@ class HingeLoss(nn.Module):
 
         '''
 
-        if not self.squared: # hinge loss
+        # hinge loss
+        if not self.squared:
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0))
-        else: # squared hinge loss
+        # squared hinge loss
+        else:
             loss = self.reduce(torch.clamp(1 - y_true.squeeze() * y_pred.squeeze(), min=0)**2)
 
         return loss
@@ -131,6 +134,7 @@ class FocalLoss(nn.Module):
                  pos_weight=1.,
                  focal_gamma=0.,
                  reduction='mean'):
+
         super().__init__()
 
         self.pos_weight = abs(pos_weight)

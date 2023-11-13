@@ -27,6 +27,7 @@ cartesian_product = [elem for elem in itertools.product(
 @pytest.fixture(params=cartesian_product)
 def data_conv_model_and_input(request):
     '''Create convolutional layer and input tensor.'''
+
     torch.manual_seed(0)
 
     input_shape, kernel_size, stride, padding, dilation = request.param
@@ -47,6 +48,7 @@ def data_conv_model_and_input(request):
 
 def test_conv_out_shape(data_conv_model_and_input):
     '''Test the predicted output shape after the convolution.'''
+
     model, X = data_conv_model_and_input
 
     y = model(X)

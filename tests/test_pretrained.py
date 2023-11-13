@@ -11,6 +11,7 @@ from torchutils.pretrained import create_feature_extractor, extract_features
 @pytest.fixture
 def data_image_loader():
     '''Create a data loader with random images.'''
+
     torch.manual_seed(0)
 
     num_samples = 10
@@ -35,6 +36,7 @@ def test_feature_extraction(data_image_loader,
                             model_constructor,
                             expected_feature_shape):
     '''Test pretrained feature extraction.'''
+
     data_loader = data_image_loader
     pretrained_model = model_constructor(pretrained=False)
 

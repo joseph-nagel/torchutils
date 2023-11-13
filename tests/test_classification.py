@@ -29,6 +29,7 @@ def data_classification(data_num_features,
                         data_num_classes,
                         data_num_samples):
     '''Create classification problem.'''
+
     torch.manual_seed(0)
 
     num_features = data_num_features
@@ -75,6 +76,7 @@ def data_classification(data_num_features,
 
 def test_classifier_inference(data_classification):
     '''Test classifier at inference.'''
+
     classifier = data_classification
     classifier.train(False)
 

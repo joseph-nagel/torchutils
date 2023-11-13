@@ -121,6 +121,7 @@ def conv_out_shape(input_shape,
 
 def _make_array(x, num_dims):
     '''Transform a scalar into an array with equal entries.'''
+
     if np.size(x) == num_dims:
         return np.array(x)
     else:

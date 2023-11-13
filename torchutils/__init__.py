@@ -19,7 +19,7 @@ tools : General tools.
 
 '''
 
-__COPYRIGHT__ = 'Copyright 2020 Joseph Benjamin Nagel'
+__COPYRIGHT__ = 'Copyright 2020-2023 Joseph Benjamin Nagel'
 
 
 from . import analysis
@@ -36,8 +36,10 @@ from .classification import Classification
 
 from .data import (
     mean_std_over_dataset,
-    GaussianNoise, BalancedSampler,
-    image2tensor, tensor2image
+    GaussianNoise,
+    BalancedSampler,
+    image2tensor,
+    tensor2image
 )
 
 from .loss import HingeLoss, FocalLoss

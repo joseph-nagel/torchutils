@@ -11,6 +11,7 @@ from torchutils.loss import HingeLoss, FocalLoss
 @pytest.fixture(params=[1, 10, 100, 1000])
 def data_y_true_y_pred(request):
     '''Sample ground truth labels and predicted logits.'''
+
     torch.manual_seed(0)
 
     num_samples = request.param
@@ -22,11 +23,12 @@ def data_y_true_y_pred(request):
     return y_true, y_pred
 
 
-class TestHingeLoss:
+class TestHingeLoss():
     '''Tests of the hinge loss.'''
 
     def test_hinge_loss_correctness(self):
         '''Test the correctness at selected points.'''
+
         hinge_loss = HingeLoss()
 
         y_true = torch.tensor(1)
@@ -43,6 +45,7 @@ class TestHingeLoss:
 
     def test_hinge_loss_reduction(self, data_y_true_y_pred):
         '''Test the reduction over multiple datapoints.'''
+
         y_true, y_pred = data_y_true_y_pred
         y_true[y_true == 0] = -1
 
@@ -56,6 +59,7 @@ class TestHingeLoss:
 
     def test_hinge_loss_squared(self, data_y_true_y_pred):
         '''Test the squared hinge loss.'''
+
         y_true, y_pred = data_y_true_y_pred
         y_true[y_true == 0] = -1
 
@@ -71,11 +75,12 @@ class TestHingeLoss:
         assert torch.allclose(losses, references)
 
 
-class TestFocalLoss:
+class TestFocalLoss():
     '''Tests of the focal loss.'''
 
     def test_focal_loss_correctness(self, data_y_true_y_pred):
         '''Test the correctness against a binary cross entropy.'''
+
         y_true, y_pred = data_y_true_y_pred
 
         focal_loss = FocalLoss()
@@ -87,6 +92,7 @@ class TestFocalLoss:
 
     def test_focal_loss_reduction(self, data_y_true_y_pred):
         '''Test the reduction over multiple datapoints.'''
+
         y_true, y_pred = data_y_true_y_pred
 
         focal_loss_mean = FocalLoss(reduction='mean')
@@ -99,6 +105,7 @@ class TestFocalLoss:
 
     def test_focal_loss_posweight(self, data_y_true_y_pred):
         '''Test varying the class weights.'''
+
         y_true, y_pred = data_y_true_y_pred
 
         y_ones = torch.ones_like(y_true)
@@ -118,6 +125,7 @@ class TestFocalLoss:
 
     def test_focal_loss_focalgamma(self, data_y_true_y_pred):
         '''Test the plausibility for differing focal parameters.'''
+
         y_true, y_pred = data_y_true_y_pred
 
         focal_loss_gamma0 = FocalLoss(focal_gamma=0.)

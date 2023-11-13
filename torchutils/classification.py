@@ -127,6 +127,7 @@ class Classification(object):
 
     def training(self, num_epochs, log_interval=100, threshold=0.5, initial_test=True):
         '''Perform a number of training epochs.'''
+
         self.epoch = 0
 
         train_losses = []
@@ -168,6 +169,7 @@ class Classification(object):
 
     def train_epoch(self, log_interval=100):
         '''Perform a single training epoch.'''
+
         self.train(True)
 
         batch_losses = []
@@ -216,6 +218,7 @@ class Classification(object):
     @torch.no_grad()
     def test(self, test_loader=None, num_epochs=1, threshold=0.5):
         '''Compute average test loss and accuracy.'''
+
         self.train(False)
 
         if test_loader is None:

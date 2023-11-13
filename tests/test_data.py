@@ -16,6 +16,7 @@ from torchutils.data import (
 @pytest.mark.parametrize('feature_shape', [(), (1,), (10,), (10, 10)])
 def test_mean_std_over_dataset(num_samples, feature_shape):
     '''Test correctness of evaluating the mean and standard deviation.'''
+
     torch.manual_seed(0)
 
     X = torch.randn(num_samples, *feature_shape)
@@ -34,6 +35,7 @@ def test_mean_std_over_dataset(num_samples, feature_shape):
 @pytest.mark.parametrize('shape', [(10, 10), (10, 10, 3), (1, 10, 10, 3)])
 def test_image2tensor2image(shape):
     '''Test the transformation and back-transformation of an image.'''
+
     np.random.seed(0)
 
     image = np.random.randn(*shape)
@@ -46,6 +48,7 @@ def test_image2tensor2image(shape):
 @pytest.mark.parametrize('shape', [(10, 10), (3, 10, 10), (1, 3, 10, 10)])
 def test_tensor2image2tensor(shape):
     '''Test the transformation and back-transformation of a tensor.'''
+
     torch.manual_seed(0)
 
     tensor = torch.randn(*shape)

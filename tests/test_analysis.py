@@ -11,6 +11,7 @@ from torchutils.analysis import conf_mat as conf_mat
 @pytest.fixture
 def data_y_true_y_top1():
     '''Sample ground truth labels and top-class predictions.'''
+
     torch.manual_seed(0)
 
     num_classes = 10
@@ -24,6 +25,7 @@ def data_y_true_y_top1():
 
 def test_conf_mat(data_y_true_y_top1):
     '''Test correctness against a reference implementation.'''
+
     y_true, y_top1 = data_y_true_y_top1
 
     confmat = conf_mat(y_true, y_top1).numpy()
