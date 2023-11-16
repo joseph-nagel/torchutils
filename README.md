@@ -6,3 +6,9 @@ It can be used in conjunction with all appropriate loss functions and optimizers
 Common tasks related to data preprocessing and pretrained models are also facilitated.
 Simple examples demonstrate the training of neural networks on MNIST and CIFAR10.
 
+## Installation
+
+```
+pip install -e .
+```
+
