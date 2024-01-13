@@ -25,67 +25,100 @@ import torch
 from torch.utils.data import DataLoader, Sampler
 
 
-def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False, verbose=True):
+def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False):
     '''
     Calculate mean and std. in a batch-wise sweep over the dataset.
 
     Parameters
     ----------
-    data_set : PyTorch DataSet object
+    data_set : PyTorch DataSet
         Set of data to be analyzed.
+    batch_size : int
+        Batch size.
+    channel_wise : bool
+        Determines whether the mean and std. are
+        calculated for each channel separately.
 
     Returns
     -------
-    mean : float or array
+    mean : float or tensor
         Mean value or channel-wise mean values.
-    std : float or array
+    std : float or tensor
         Standard deviation or channel-wise standard deviations.
 
     '''
 
-    # data loader
-    data_loader = DataLoader(data_set, batch_size=batch_size, shuffle=False)
+    # create data loader
+    data_loader = DataLoader(
+        data_set,
+        batch_size=batch_size,
+        shuffle=False,
+        drop_last=False
+    )
 
-    # mean and std.
+    # calculate stats (avg. over channels)
     if not channel_wise:
 
-        # mean
-        mean = 0.
-        for images, labels in data_loader:
-            # print('{}'.format(images.numpy().shape))
-            mean += np.mean(images.numpy())
-        mean /= len(data_loader)
+        # calculate mean
+        num_terms = 0
+        total_sum = 0.
 
-        # std.
-        std = 0.
-        for images, labels in data_loader:
-            std += np.mean((images.numpy() - mean)**2)
-        std /= len(data_loader) - 1
-        std = np.sqrt(std)
+        for x_batch, y_batch in data_loader:
+            num_terms += torch.numel(x_batch)
+            total_sum += torch.sum(x_batch)
 
-    # channel-wise mean and std.
+        mean = total_sum / num_terms
+
+        # calculate std.
+        num_terms = 0
+        total_sum = 0.
+
+        for x_batch, y_batch in data_loader:
+            num_terms += torch.numel(x_batch)
+            total_sum += torch.sum((x_batch - mean)**2)
+
+        var = total_sum / (num_terms - 1)
+
+        std = torch.sqrt(var)
+
+    # calculate stats per channel
     else:
 
-        # mean
-        num_summands = 0.
-        mean = np.zeros(3)
-        for images, labels in data_loader:
-            mean += np.sum(images.numpy(), axis=(0,2,3))
-            num_summands += np.size(images.numpy()[:,0,:,:])
-        mean /= num_summands
+        # calculate mean
+        num_terms = 0
+        total_sum = 0.
 
-        # std.
-        num_summands = 0.
-        std = np.zeros(3)
-        for images, labels in data_loader:
-            std += np.sum((images.numpy() - mean.reshape(1,-1,1,1))**2, axis=(0,2,3))
-            num_summands += np.size(images.numpy()[:,0,:,:])
-        std /= num_summands - 1
-        std = np.sqrt(std)
+        for x_batch, y_batch in data_loader:
+            num_terms += torch.numel(x_batch[:,0])
 
-    if verbose:
-        print('Mean: {}'.format(np.array2string(np.array(mean), precision=4)))
-        print('Std.: {}'.format(np.array2string(np.array(std), precision=4)))
+            total_sum += torch.sum(
+                x_batch,
+                dim=[d for d in range(x_batch.ndim) if d != 1],
+                keepdim=True
+            )
+
+        mean = total_sum / num_terms
+
+        # calculate std.
+        num_terms = 0
+        total_sum = 0.
+
+        for x_batch, y_batch in data_loader:
+            num_terms += torch.numel(x_batch[:,0])
+
+            total_sum += torch.sum(
+                (x_batch - mean)**2,
+                dim=[d for d in range(x_batch.ndim) if d != 1],
+                keepdim=True
+            )
+
+        var = total_sum / (num_terms - 1)
+
+        std = torch.sqrt(var)
+
+        # squeeze outputs
+        mean = mean.squeeze()
+        std = std.squeeze()
 
     return mean, std
 
