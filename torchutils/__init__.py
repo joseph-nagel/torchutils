@@ -22,13 +22,14 @@ tools : General tools.
 __COPYRIGHT__ = 'Copyright 2020-2023 Joseph Benjamin Nagel'
 
 
-from . import analysis
-from . import classification
-from . import data
-from . import loss
-from . import pretrained
-from . import tools
-
+from . import (
+    analysis,
+    classification,
+    data,
+    loss,
+    pretrained,
+    tools
+)
 
 from .analysis import confusion_matrix
 
