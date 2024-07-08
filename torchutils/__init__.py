@@ -19,9 +19,6 @@ tools : General tools.
 
 '''
 
-__COPYRIGHT__ = 'Copyright 2020-2023 Joseph Benjamin Nagel'
-
-
 from . import (
     analysis,
     classification,
@@ -37,6 +34,7 @@ from .classification import Classification
 
 from .data import (
     mean_std_over_dataset,
+    SingleTensorDataset,
     GaussianNoise,
     BalancedSampler,
     image2tensor,

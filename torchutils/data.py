@@ -22,7 +22,11 @@ ints in [0,255] or floats in [0,1], while torchvision.transforms.ToTensor yields
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader, Sampler
+from torch.utils.data import (
+    TensorDataset,
+    DataLoader,
+    Sampler
+)
 
 
 def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False):
@@ -121,6 +125,29 @@ def mean_std_over_dataset(data_set, batch_size=1, channel_wise=False):
         std = std.squeeze()
 
     return mean, std
+
+
+class SingleTensorDataset(TensorDataset):
+    '''
+    A simple dataset for a single tensor.
+
+    Summary
+    -------
+    This class implements a simple dataset for a single tensor.
+    It returns tensors rather than tuples (with a single element).
+
+    Parameters
+    ----------
+    tensor : PyTorch tensor
+        Tensor containing the data.
+
+    '''
+
+    def __init__(self, tensor):
+        super().__init__(tensor)
+
+    def __getitem__(self, idx):
+        return super().__getitem__(idx)[0] # return tensor instead of tuple
 
 
 class GaussianNoise(object):
