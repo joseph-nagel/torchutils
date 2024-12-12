@@ -193,7 +193,12 @@ class BalancedSampler(Sampler):
 
     '''
 
-    def __init__(self, dataset, num_samples=None, indices=None):
+    def __init__(
+        self,
+        dataset,
+        num_samples=None,
+        indices=None
+    ):
 
         self.indices = list(range(len(dataset)))
 

@@ -32,9 +32,11 @@ def data_image_loader():
     (models.resnet18, (512, 7, 7)),
     (models.densenet121, (1024, 7, 7))
 ])
-def test_feature_extraction(data_image_loader,
-                            model_constructor,
-                            expected_feature_shape):
+def test_feature_extraction(
+    data_image_loader,
+    model_constructor,
+    expected_feature_shape
+):
     '''Test pretrained feature extraction.'''
 
     data_loader = data_image_loader

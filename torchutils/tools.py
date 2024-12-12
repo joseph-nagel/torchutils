@@ -54,12 +54,14 @@ def moving_average(x, window=3, mode='full'):
     return running_mean
 
 
-def conv_out_shape(input_shape,
-                   kernel_size,
-                   stride=1,
-                   padding=0,
-                   dilation=1,
-                   mode='floor'):
+def conv_out_shape(
+    input_shape,
+    kernel_size,
+    stride=1,
+    padding=0,
+    dilation=1,
+    mode='floor'
+):
     '''
     Calculate the output shape of a convolutional layer.
 

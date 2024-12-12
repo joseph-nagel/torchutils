@@ -12,11 +12,13 @@ to calculate and compile the confusion matrix of a classifier.
 import torch
 
 
-def confusion_matrix(classifier,
-                     data_loader,
-                     num_epochs=1,
-                     num_classes=None,
-                     **kwargs):
+def confusion_matrix(
+    classifier,
+    data_loader,
+    num_epochs=1,
+    num_classes=None,
+    **kwargs
+):
     '''
     Calculate the confusion matrix for a classifier and data loader.
 

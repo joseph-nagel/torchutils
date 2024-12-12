@@ -25,9 +25,11 @@ def data_num_samples(request):
 
 
 @pytest.fixture
-def data_classification(data_num_features,
-                        data_num_classes,
-                        data_num_samples):
+def data_classification(
+    data_num_features,
+    data_num_classes,
+    data_num_samples
+):
     '''Create classification problem.'''
 
     torch.manual_seed(0)

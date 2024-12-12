@@ -62,12 +62,15 @@ class Classification(object):
 
     '''
 
-    def __init__(self, model,
-                 criterion,
-                 optimizer,
-                 train_loader,
-                 val_loader=None,
-                 device=None):
+    def __init__(
+        self,
+        model,
+        criterion,
+        optimizer,
+        train_loader,
+        val_loader=None,
+        device=None
+    ):
 
         # arguments
         self.model = model
@@ -125,7 +128,13 @@ class Classification(object):
         '''Set training mode of the model.'''
         self.model.train(mode)
 
-    def training(self, num_epochs, log_interval=100, threshold=0.5, initial_test=True):
+    def training(
+        self,
+        num_epochs,
+        log_interval=100,
+        threshold=0.5,
+        initial_test=True
+    ):
         '''Perform a number of training epochs.'''
 
         self.epoch = 0
@@ -216,7 +225,12 @@ class Classification(object):
         return running_loss
 
     @torch.no_grad()
-    def test(self, test_loader=None, num_epochs=1, threshold=0.5):
+    def test(
+        self,
+        test_loader=None,
+        num_epochs=1,
+        threshold=0.5
+    ):
         '''Compute average test loss and accuracy.'''
 
         self.train(False)

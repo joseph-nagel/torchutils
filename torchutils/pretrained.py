@@ -32,10 +32,12 @@ from torchvision.models import (
 )
 
 
-def create_feature_extractor(model_architecture,
-                             input_shape=None,
-                             is_pretrained=True,
-                             is_frozen=True):
+def create_feature_extractor(
+    model_architecture,
+    input_shape=None,
+    is_pretrained=True,
+    is_frozen=True
+):
     '''
     Create a pretrained feature extractor.
 
@@ -120,7 +122,12 @@ def get_output_shape(model, input_shape):
     return output_shape
 
 
-def extract_features(feature_extractor, data_loader, expand=None, as_array=False):
+def extract_features(
+    feature_extractor,
+    data_loader,
+    expand=None,
+    as_array=False
+):
     '''
     Extract features given a model and a data loader.
 
