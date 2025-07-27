@@ -62,9 +62,9 @@ def create_feature_extractor(
 
     # initialize model
     if isinstance(model_architecture, (AlexNet, VGG, ResNet, DenseNet)):
-        pretrained_model = model_architecture # is already a model instance
+        pretrained_model = model_architecture  # is already a model instance
     else:
-        pretrained_model = model_architecture(pretrained=is_pretrained) # is only a model constructor
+        pretrained_model = model_architecture(pretrained=is_pretrained)  # is only a model constructor
 
     # freeze parameters
     if is_frozen:
@@ -166,11 +166,11 @@ def extract_features(
         features_list.append(features)
         labels_list.append(labels)
 
-    if as_array: # Numpy arrays
+    if as_array:  # Numpy arrays
         features = np.concatenate([tensor.numpy() for tensor in features_list], axis=0)
         labels = np.concatenate([tensor.numpy() for tensor in labels_list], axis=0)
 
-    else: # PyTorch tensors
+    else:  # PyTorch tensors
         features = torch.cat(features_list, dim=0)
         labels = torch.cat(labels_list, dim=0)
 

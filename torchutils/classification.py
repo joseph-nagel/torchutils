@@ -279,9 +279,9 @@ class Classification(object):
 
         test_acc = num_correct / num_total
 
-        if self.criterion.reduction == 'sum': # averaging over all data
+        if self.criterion.reduction == 'sum':  # averaging over all data
             test_loss /= len(test_loader.dataset)
-        elif self.criterion.reduction == 'mean': # averaging over batches
+        elif self.criterion.reduction == 'mean':  # averaging over batches
             test_loss /= len(test_loader)
 
         return test_loss, test_acc

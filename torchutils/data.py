@@ -147,7 +147,7 @@ class SingleTensorDataset(TensorDataset):
         super().__init__(tensor)
 
     def __getitem__(self, idx):
-        return super().__getitem__(idx)[0] # return tensor instead of tuple
+        return super().__getitem__(idx)[0]  # return tensor instead of tuple
 
 
 class GaussianNoise(object):
@@ -254,18 +254,18 @@ def image2tensor(image, unsqueeze=True):
 
     '''
 
-    if image.ndim == 2: # (num_rows, num_cols)
+    if image.ndim == 2:  # (num_rows, num_cols)
         tensor = torch.from_numpy(image)
-    elif image.ndim == 3: # (num_rows, num_cols, num_channels)
+    elif image.ndim == 3:  # (num_rows, num_cols, num_channels)
         tensor = torch.from_numpy(image.transpose(2, 0, 1))
-    elif image.ndim == 4: # (num_samples, num_rows, num_channels)
+    elif image.ndim == 4:  # (num_samples, num_rows, num_channels)
         tensor = torch.from_numpy(image.transpose(0, 3, 1, 2))
 
     if unsqueeze:
         for _ in range(4 - image.ndim):
             tensor = tensor.unsqueeze(0)
 
-    return tensor # (num_samples, num_channels, num_rows, num_colums)
+    return tensor  # (num_samples, num_channels, num_rows, num_colums)
 
 
 def tensor2image(tensor, squeeze=True):
@@ -283,15 +283,15 @@ def tensor2image(tensor, squeeze=True):
 
     '''
 
-    if tensor.ndim == 2: # (num_rows, num_cols)
+    if tensor.ndim == 2:  # (num_rows, num_cols)
         image = tensor.numpy()
-    elif tensor.ndim == 3: # (num_channels, num_rows, num_cols)
+    elif tensor.ndim == 3:  # (num_channels, num_rows, num_cols)
         image = tensor.numpy().transpose((1, 2, 0))
-    elif tensor.ndim == 4: # (num_samples, num_channels, num_rows, num_cols)
+    elif tensor.ndim == 4:  # (num_samples, num_channels, num_rows, num_cols)
         image = tensor.numpy().transpose((0, 2, 3, 1))
 
     if squeeze:
         image = image.squeeze()
 
-    return image # (num_samples, num_rows, num_cols, num_channels)
+    return image  # (num_samples, num_rows, num_cols, num_channels)
 
