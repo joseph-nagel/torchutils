@@ -56,4 +56,3 @@ def test_tensor2image2tensor(shape):
     new_tensor = image2tensor(image)
 
     assert np.allclose(tensor.squeeze(), new_tensor.squeeze())
-

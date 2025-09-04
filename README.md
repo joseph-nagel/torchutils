@@ -10,7 +10,6 @@ Simple examples demonstrate the training of neural networks on MNIST and CIFAR10
 ## Notebooks
 
 - [MNIST example](notebooks/mnist.ipynb)
-
 - [CIFAR-10 example](notebooks/cifar10.ipynb)
 
 
@@ -19,4 +18,3 @@ Simple examples demonstrate the training of neural networks on MNIST and CIFAR10
 ```
 pip install -e .
 ```
-

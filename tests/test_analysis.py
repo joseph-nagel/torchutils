@@ -32,4 +32,3 @@ def test_conf_mat(data_y_true_y_top1):
     reference = confusion_matrix(y_true.numpy(), y_top1.numpy())
 
     assert np.allclose(confmat, reference)
-

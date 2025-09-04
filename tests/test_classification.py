@@ -98,4 +98,3 @@ def test_classifier_inference(data_classification):
     assert y_pred.shape == (X_batch.shape[0], classifier.model.out_features)
     assert y_proba.shape == (X_batch.shape[0], classifier.model.out_features)
     assert y_topclass.numel() == y_batch.numel()
-

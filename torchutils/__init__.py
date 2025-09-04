@@ -46,4 +46,3 @@ from .loss import HingeLoss, FocalLoss
 from .pretrained import create_feature_extractor, extract_features
 
 from .tools import conv_out_shape
-

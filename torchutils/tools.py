@@ -128,4 +128,3 @@ def _make_array(x, num_dims):
         return np.array(x)
     else:
         return np.array([x for i in range(num_dims)])
-

@@ -285,4 +285,3 @@ class Classification(object):
             test_loss /= len(test_loader)
 
         return test_loss, test_acc
-

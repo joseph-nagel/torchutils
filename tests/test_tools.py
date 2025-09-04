@@ -64,4 +64,3 @@ def test_conv_out_shape(data_conv_model_and_input):
     )
 
     assert predicted_out_shape == actual_out_shape
-

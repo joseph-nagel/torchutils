@@ -294,4 +294,3 @@ def tensor2image(tensor, squeeze=True):
         image = image.squeeze()
 
     return image  # (num_samples, num_rows, num_cols, num_channels)
-

@@ -135,4 +135,3 @@ class TestFocalLoss():
         loss_gamma1 = focal_loss_gamma1(y_pred, y_true)
 
         assert loss_gamma1 < loss_gamma0
-

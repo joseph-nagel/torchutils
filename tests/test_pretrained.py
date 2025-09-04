@@ -46,4 +46,3 @@ def test_feature_extraction(
     features, labels = extract_features(feature_extractor, data_loader)
 
     assert features.shape[1:] == expected_feature_shape
-

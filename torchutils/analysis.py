@@ -77,4 +77,3 @@ def conf_mat(y_true, y_pred, num_classes=None):
         confmat[r, c] += 1
 
     return confmat
-

@@ -175,4 +175,3 @@ def extract_features(
         labels = torch.cat(labels_list, dim=0)
 
     return features, labels
-

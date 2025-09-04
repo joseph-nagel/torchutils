@@ -182,4 +182,3 @@ class FocalLoss(nn.Module):
         loss = self.reduce(balance_weights * focal_weights * bce_terms)
 
         return loss
-

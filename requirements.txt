@@ -4,4 +4,3 @@ torchvision
 pytest
 matplotlib
 notebook
-
